@@ -4,6 +4,7 @@ const NOT_FOUND = -1;
 
 class SlidingBehaviour extends StatefulWidget {
   final Widget child;
+  final SlidingBehaviourController controller;
 
   final double minHeight;
   final double maxHeight;
@@ -14,12 +15,13 @@ class SlidingBehaviour extends StatefulWidget {
 
   SlidingBehaviour({
     @required this.child,
+    @required this.controller,
     @required this.minHeight,
     @required this.maxHeight,
     @required this.onSlide,
     @required this.onSnap,
-    this.isDraggable = true,
-    this.anchors = const [0.0, 1.0],
+    this.isDraggable,
+    this.anchors,
     Key key,
   }) : super(key: key);
 
@@ -38,6 +40,8 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
     slidingAnimation = AnimationController(vsync: this);
     slidingAnimation.addListener(_onSlide);
     slidingAnimation.addStatusListener(_onSlideAnimationStatusChanged);
+
+    widget.controller._attach(this);
 
     super.initState();
   }
@@ -126,5 +130,20 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeOut,
     );
+  }
+}
+
+class SlidingBehaviourController {
+  _SlidingBehaviourState slidingBehaviour;
+
+  // int get currentSnap => slidingBehaviour._currentSnap;
+  // double get currentBottomSheetPosition => slidingBehaviour._currentBottomSheetPosition;
+
+  void snapTo(int snapPointIndex) {
+    slidingBehaviour.snapTo(snapPointIndex);
+  }
+
+  void _attach(_SlidingBehaviourState behavour) {
+    slidingBehaviour = behavour;
   }
 }

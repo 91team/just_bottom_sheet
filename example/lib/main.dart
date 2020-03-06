@@ -26,6 +26,19 @@ class JustBottomSheetExample extends StatefulWidget {
 }
 
 class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
+  JustBottomSheetController controller;
+
+  @override
+  void initState() {
+    controller = JustBottomSheetController();
+
+    Future.delayed(const Duration(seconds: 3), () {
+      controller.snapTo(2);
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +51,7 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
             maxHeight: 600,
             anchors: [0, 0.5, 1],
             onSnap: _onSnap,
+            controller: controller,
             child: Column(
               children: <Widget>[
                 Container(

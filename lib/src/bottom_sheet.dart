@@ -1,4 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:just_bottom_sheet/src/inner_controller.dart';
+import 'package:just_bottom_sheet/src/inner_controller_provider.dart';
 import 'package:just_bottom_sheet/src/list_content.dart';
 import 'package:just_bottom_sheet/src/single_child_content.dart';
 
@@ -16,13 +18,15 @@ class JustBottomSheet extends StatefulWidget {
   final Function(int anchorIndex) onSnap;
   final BoxDecoration panelDecoration;
   final bool isDraggable;
+  final JustBottomSheetController controller;
 
   JustBottomSheet.singleChild({
     @required this.child,
     @required this.minHeight,
     @required this.maxHeight,
-    this.isDraggable,
-    this.anchors,
+    this.isDraggable = true,
+    this.controller,
+    this.anchors = const [0.0, 1.0],
     this.onSlide,
     this.onSnap,
     this.panelDecoration,
@@ -35,8 +39,9 @@ class JustBottomSheet extends StatefulWidget {
     @required this.builder,
     @required this.minHeight,
     @required this.maxHeight,
-    this.isDraggable,
-    this.anchors,
+    this.isDraggable = true,
+    this.controller,
+    this.anchors = const [0.0, 1.0],
     this.onSlide,
     this.onSnap,
     this.panelDecoration,
@@ -49,8 +54,9 @@ class JustBottomSheet extends StatefulWidget {
     @required this.children,
     @required this.minHeight,
     @required this.maxHeight,
-    this.isDraggable,
-    this.anchors,
+    this.isDraggable = true,
+    this.controller,
+    this.anchors = const [0.0, 1.0],
     this.onSlide,
     this.onSnap,
     this.panelDecoration,
@@ -64,22 +70,41 @@ class JustBottomSheet extends StatefulWidget {
 }
 
 class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProviderStateMixin {
+  BottomSheetInnerController innerController;
+  SlidingBehaviourController slidingBehaviourController;
+
+  @override
+  void initState() {
+    if (widget.controller != null) {
+      widget.controller._attach(this);
+    }
+
+    innerController = BottomSheetInnerController();
+    slidingBehaviourController = SlidingBehaviourController();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Positioned(
       bottom: 0,
       width: MediaQuery.of(context).size.width,
-      child: SlidingBehaviour(
-        minHeight: widget.minHeight,
-        maxHeight: widget.maxHeight,
-        anchors: widget.anchors,
-        onSlide: widget.onSlide,
-        onSnap: widget.onSnap,
-        isDraggable: widget.isDraggable,
-        child: Panel(
-          height: widget.maxHeight,
-          decoration: widget.panelDecoration,
-          child: _selectChild(),
+      child: BottomSheetInnerControllerProvider(
+        controller: innerController,
+        child: SlidingBehaviour(
+          minHeight: widget.minHeight,
+          maxHeight: widget.maxHeight,
+          anchors: widget.anchors,
+          onSlide: widget.onSlide,
+          onSnap: widget.onSnap,
+          isDraggable: widget.isDraggable,
+          controller: slidingBehaviourController,
+          child: Panel(
+            height: widget.maxHeight,
+            decoration: widget.panelDecoration,
+            child: _selectChild(),
+          ),
         ),
       ),
     );
@@ -95,5 +120,27 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
     }
 
     throw Exception("No child, children or builder provided. Check _selectChild in _JustBottomSheetState");
+  }
+
+  int get _currentSnap => 0;
+  double get _currentBottomSheetPosition => 0;
+
+  void _snapTo(int snapPointIndex) {
+    slidingBehaviourController.snapTo(snapPointIndex);
+  }
+}
+
+class JustBottomSheetController {
+  _JustBottomSheetState bottomSheet;
+
+  int get currentSnap => bottomSheet._currentSnap;
+  double get currentBottomSheetPosition => bottomSheet._currentBottomSheetPosition;
+
+  void snapTo(int snapPointIndex) {
+    bottomSheet._snapTo(snapPointIndex);
+  }
+
+  void _attach(_JustBottomSheetState bs) {
+    bottomSheet = bs;
   }
 }
