@@ -33,9 +33,11 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
         fit: StackFit.expand,
         children: [
           Background(),
-          JustBottomSheet(
+          JustBottomSheet.singleChild(
             minHeight: 200,
             maxHeight: 600,
+            anchors: [0, 0.5, 1],
+            onSnap: _onSnap,
             child: Column(
               children: <Widget>[
                 Container(
@@ -68,5 +70,9 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
         ],
       ),
     );
+  }
+
+  void _onSnap(int snapPointIndex) {
+    print(snapPointIndex);
   }
 }
