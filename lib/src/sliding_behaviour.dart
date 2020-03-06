@@ -10,12 +10,15 @@ class SlidingBehaviour extends StatefulWidget {
   final List<double> anchors;
   final Function(double value) onSlide;
   final Function(int anchorIndex) onSnap;
+  final bool isDraggable;
+
   SlidingBehaviour({
     @required this.child,
     @required this.minHeight,
     @required this.maxHeight,
     @required this.onSlide,
     @required this.onSnap,
+    this.isDraggable = true,
     this.anchors = const [0.0, 1.0],
     Key key,
   }) : super(key: key);
@@ -80,15 +83,19 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
   }
 
   void _onDragStart(DragStartDetails event) {
+    if (!widget.isDraggable) return;
     // 1. Check if scroll available. If so, return
     // 2. Dismiss all running animations
   }
 
   void _onDragUpdate(DragUpdateDetails event) {
+    if (!widget.isDraggable) return;
     slidingAnimation.value -= event.delta.dy / (maxHeight - minHeight);
   }
 
   void _onDragEnd(DragEndDetails event) {
+    if (!widget.isDraggable) return;
+
     final y = slidingAnimation.value;
     final velocity = event.velocity.pixelsPerSecond.dy;
 

@@ -15,11 +15,13 @@ class JustBottomSheet extends StatefulWidget {
   final Function(double value) onSlide;
   final Function(int anchorIndex) onSnap;
   final BoxDecoration panelDecoration;
+  final bool isDraggable;
 
   JustBottomSheet.singleChild({
     @required this.child,
     @required this.minHeight,
     @required this.maxHeight,
+    this.isDraggable,
     this.anchors,
     this.onSlide,
     this.onSnap,
@@ -33,6 +35,7 @@ class JustBottomSheet extends StatefulWidget {
     @required this.builder,
     @required this.minHeight,
     @required this.maxHeight,
+    this.isDraggable,
     this.anchors,
     this.onSlide,
     this.onSnap,
@@ -46,6 +49,7 @@ class JustBottomSheet extends StatefulWidget {
     @required this.children,
     @required this.minHeight,
     @required this.maxHeight,
+    this.isDraggable,
     this.anchors,
     this.onSlide,
     this.onSnap,
@@ -71,6 +75,7 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
         anchors: widget.anchors,
         onSlide: widget.onSlide,
         onSnap: widget.onSnap,
+        isDraggable: widget.isDraggable,
         child: Panel(
           height: widget.maxHeight,
           decoration: widget.panelDecoration,
