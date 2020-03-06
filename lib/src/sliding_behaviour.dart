@@ -12,6 +12,7 @@ class SlidingBehaviour extends StatefulWidget {
   final Function(double value) onSlide;
   final Function(int anchorIndex) onSnap;
   final bool isDraggable;
+  final int initialAnchorIndex;
 
   SlidingBehaviour({
     @required this.child,
@@ -22,6 +23,7 @@ class SlidingBehaviour extends StatefulWidget {
     @required this.onSnap,
     this.isDraggable,
     this.anchors,
+    this.initialAnchorIndex,
     Key key,
   }) : super(key: key);
 
@@ -31,9 +33,13 @@ class SlidingBehaviour extends StatefulWidget {
 
 class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerProviderStateMixin {
   AnimationController slidingAnimation;
+  int currentSnapPoint;
 
   double get minHeight => widget.minHeight;
   double get maxHeight => widget.maxHeight;
+
+  double get currentBottomSheetPosition => slidingAnimation.value;
+  bool get isSliding => slidingAnimation.isAnimating;
 
   @override
   void initState() {
@@ -42,6 +48,7 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
     slidingAnimation.addStatusListener(_onSlideAnimationStatusChanged);
 
     widget.controller._attach(this);
+    currentSnapPoint = widget.initialAnchorIndex;
 
     super.initState();
   }
@@ -136,8 +143,8 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
 class SlidingBehaviourController {
   _SlidingBehaviourState slidingBehaviour;
 
-  // int get currentSnap => slidingBehaviour._currentSnap;
-  // double get currentBottomSheetPosition => slidingBehaviour._currentBottomSheetPosition;
+  bool get isSliding => slidingBehaviour.isSliding;
+  double get currentBottomSheetPosition => slidingBehaviour.currentBottomSheetPosition;
 
   void snapTo(int snapPointIndex) {
     slidingBehaviour.snapTo(snapPointIndex);

@@ -122,8 +122,8 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
     throw Exception("No child, children or builder provided. Check _selectChild in _JustBottomSheetState");
   }
 
-  int get _currentSnap => 0;
-  double get _currentBottomSheetPosition => 0;
+  bool get _isSliding => slidingBehaviourController.isSliding;
+  double get _currentBottomSheetPosition => slidingBehaviourController.currentBottomSheetPosition;
 
   void _snapTo(int snapPointIndex) {
     slidingBehaviourController.snapTo(snapPointIndex);
@@ -133,7 +133,7 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
 class JustBottomSheetController {
   _JustBottomSheetState bottomSheet;
 
-  int get currentSnap => bottomSheet._currentSnap;
+  bool get isSliding => bottomSheet._isSliding;
   double get currentBottomSheetPosition => bottomSheet._currentBottomSheetPosition;
 
   void snapTo(int snapPointIndex) {
