@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 
 class JustBottomSheet extends StatefulWidget {
   final Widget child;
+  final double minHeight;
+  final double maxHeight;
   final List<double> anchors;
   final Function(double value) onSlide;
   final Function(int anchorIndex) onSnap;
@@ -9,7 +11,9 @@ class JustBottomSheet extends StatefulWidget {
 
   JustBottomSheet({
     @required this.child,
-    @required this.anchors,
+    @required this.minHeight,
+    @required this.maxHeight,
+    this.anchors = const [0.0, 1.0],
     this.onSlide,
     this.onSnap,
     this.panelDecoration,
@@ -23,8 +27,8 @@ class JustBottomSheet extends StatefulWidget {
 class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProviderStateMixin {
   AnimationController slidingAnimation;
 
-  double get minHeight => widget.anchors.first;
-  double get maxHeight => widget.anchors.last;
+  double get minHeight => widget.minHeight;
+  double get maxHeight => widget.maxHeight;
 
   @override
   void initState() {
@@ -41,6 +45,7 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
       bottom: 0,
       width: MediaQuery.of(context).size.width,
       child: GestureDetector(
+        onVerticalDragStart: _onDragStart,
         onVerticalDragUpdate: _onDragUpdate,
         onVerticalDragEnd: _onDragEnd,
         child: AnimatedBuilder(
@@ -88,19 +93,37 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
     }
   }
 
+  void _onDragStart(DragStartDetails event) {
+    // 1. Check if scroll available. If so, return
+    // 2. Dismiss all running animations
+  }
+
   void _onDragUpdate(DragUpdateDetails event) {
     slidingAnimation.value -= event.delta.dy / (maxHeight - minHeight);
   }
 
   void _onDragEnd(DragEndDetails event) {
-    //
+    final y = slidingAnimation.value;
+    final velocity = event.velocity.pixelsPerSecond.dy;
+
+    final snapPointIndex = _findPointToSnap(y, velocity);
+    snapTo(snapPointIndex);
+  }
+
+  int _findPointToSnap(double currentValue, double velocity) {
+    return 0;
   }
 
   double _calculateSheetHeight() {
     return slidingAnimation.value * (maxHeight - minHeight) + minHeight;
   }
 
-  void snapTo(int anchorIndex) {
-    // Run snap animation
+  Future<void> snapTo(int anchorIndex) {
+    final positionToAnimate = widget.anchors[anchorIndex];
+
+    return slidingAnimation.animateTo(
+      positionToAnimate,
+      duration: const Duration(milliseconds: 300),
+    );
   }
 }

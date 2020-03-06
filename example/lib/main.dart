@@ -34,7 +34,8 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
         children: [
           Background(),
           JustBottomSheet(
-            anchors: [200, 600],
+            minHeight: 200,
+            maxHeight: 600,
             child: Column(
               children: <Widget>[
                 Container(
