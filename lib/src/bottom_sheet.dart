@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
+import 'package:just_bottom_sheet/src/list_content.dart';
+import 'package:just_bottom_sheet/src/single_child_content.dart';
 
 import 'panel.dart';
 import 'sliding_behaviour.dart';
-
-const NOT_FOUND = -1;
 
 class JustBottomSheet extends StatefulWidget {
   final Widget child;
@@ -73,16 +73,22 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
         onSnap: widget.onSnap,
         child: Panel(
           height: widget.maxHeight,
-          child: SingleChildScrollView(
-            physics: NeverScrollableScrollPhysics(),
-            child: widget.child,
-          ),
+          decoration: widget.panelDecoration,
+          child: _selectChild(),
         ),
       ),
     );
   }
 
-  // Future<void> snapTo(int anchorIndex) {
-  //   //
-  // }
+  Widget _selectChild() {
+    if (widget.child != null) {
+      return SingleChildContent(child: widget.child);
+    }
+
+    if (widget.children != null) {
+      return ListContent(children: widget.children);
+    }
+
+    throw Exception("No child, children or builder provided. Check _selectChild in _JustBottomSheetState");
+  }
 }
