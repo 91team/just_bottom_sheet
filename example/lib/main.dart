@@ -29,10 +29,43 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(fit: StackFit.expand, children: [
-        Background(),
-        JustBottomSheet(anchors: [200, 600])
-      ]),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Background(),
+          JustBottomSheet(
+            anchors: [200, 600],
+            child: Column(
+              children: <Widget>[
+                Container(
+                  width: 100,
+                  height: 100,
+                  margin: EdgeInsets.all(16),
+                  color: Color(0xFFFF0000),
+                ),
+                Container(
+                  width: 100,
+                  height: 100,
+                  margin: EdgeInsets.all(16),
+                  color: Color(0xFFFF0000),
+                ),
+                Container(
+                  width: 100,
+                  height: 100,
+                  margin: EdgeInsets.all(16),
+                  color: Color(0xFFFF0000),
+                ),
+                Container(
+                  width: 100,
+                  height: 100,
+                  margin: EdgeInsets.all(16),
+                  color: Color(0xFFFF0000),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
