@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:just_bottom_sheet/src/inner_controller.dart';
 
 const NOT_FOUND = -1;
 
@@ -23,7 +24,7 @@ class SlidingBehaviour extends StatefulWidget {
     @required this.onSnap,
     this.isDraggable,
     this.anchors,
-    this.initialAnchorIndex,
+    this.initialAnchorIndex = 0,
     Key key,
   }) : super(key: key);
 
@@ -32,6 +33,7 @@ class SlidingBehaviour extends StatefulWidget {
 }
 
 class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerProviderStateMixin {
+  BottomSheetInnerController innerController;
   AnimationController slidingAnimation;
   int currentSnapPoint;
 
@@ -43,14 +45,20 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
 
   @override
   void initState() {
-    slidingAnimation = AnimationController(vsync: this);
+    currentSnapPoint = widget.initialAnchorIndex;
+
+    slidingAnimation = AnimationController(
+      vsync: this,
+      value: widget.anchors[currentSnapPoint],
+    );
     slidingAnimation.addListener(_onSlide);
     slidingAnimation.addStatusListener(_onSlideAnimationStatusChanged);
 
     widget.controller._attach(this);
-    currentSnapPoint = widget.initialAnchorIndex;
 
     super.initState();
+
+    // innerController = BottomSheetInnerControllerProvider.of(context);
   }
 
   @override

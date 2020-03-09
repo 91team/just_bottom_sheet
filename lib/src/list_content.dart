@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import 'inner_controller_provider.dart';
+
 class ListContent extends StatelessWidget {
   final List<Widget> children;
 
@@ -10,9 +12,17 @@ class ListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      physics: NeverScrollableScrollPhysics(),
-      children: children,
+    final innerController = BottomSheetInnerControllerProvider.of(context);
+
+    return StreamBuilder(
+      stream: innerController.isScrollLockedStream,
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        final isScrollLocked = snapshot.data;
+        return ListView(
+          physics: isScrollLocked ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
+          children: children,
+        );
+      },
     );
   }
 }
