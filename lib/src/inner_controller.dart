@@ -1,19 +1,32 @@
-import 'dart:async';
+import 'package:flutter/widgets.dart';
 
 class BottomSheetInnerController {
-  StreamController<bool> isScrollLockedStreamController = StreamController();
+  bool isScrollEnabled = false;
 
-  Stream<bool> get isScrollLockedStream => isScrollLockedStreamController.stream;
+  ScrollController scrollController = ScrollController();
 
-  void lock() {
-    isScrollLockedStreamController.add(true);
+  BottomSheetInnerController() {
+    scrollController.addListener(_onScroll);
   }
 
-  void unlock() {
-    isScrollLockedStreamController.add(false);
+  bool get isScrollDisabled => !isScrollEnabled;
+  bool get isDraggingLocked => isScrollEnabled;
+
+  _onScroll() {
+    if (isScrollDisabled) {
+      scrollController.jumpTo(0);
+    }
+  }
+
+  void enableScroll() {
+    isScrollEnabled = true;
+  }
+
+  void disableScroll() {
+    isScrollEnabled = false;
   }
 
   void dispose() {
-    isScrollLockedStreamController.close();
+    scrollController.dispose();
   }
 }

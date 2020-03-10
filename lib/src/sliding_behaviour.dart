@@ -1,5 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:just_bottom_sheet/src/inner_controller.dart';
+
+import 'inner_controller_provider.dart';
 
 const NOT_FOUND = -1;
 
@@ -33,15 +36,19 @@ class SlidingBehaviour extends StatefulWidget {
 }
 
 class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerProviderStateMixin {
-  BottomSheetInnerController innerController;
   AnimationController slidingAnimation;
+  BottomSheetInnerController bottomSheetController;
+  VelocityTracker velocityTracker;
   int currentSnapPoint;
+
+  bool isDragJustStarted = false;
 
   double get minHeight => widget.minHeight;
   double get maxHeight => widget.maxHeight;
 
   double get currentBottomSheetPosition => slidingAnimation.value;
   bool get isSliding => slidingAnimation.isAnimating;
+  bool get isOpened => slidingAnimation.value == widget.anchors.last;
 
   @override
   void initState() {
@@ -54,19 +61,23 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
     slidingAnimation.addListener(_onSlide);
     slidingAnimation.addStatusListener(_onSlideAnimationStatusChanged);
 
+    velocityTracker = VelocityTracker();
+
     widget.controller._attach(this);
 
     super.initState();
 
-    // innerController = BottomSheetInnerControllerProvider.of(context);
+    Future.delayed(Duration.zero, () {
+      bottomSheetController = BottomSheetInnerControllerProvider.of(context);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onVerticalDragStart: _onDragStart,
-      onVerticalDragUpdate: _onDragUpdate,
-      onVerticalDragEnd: _onDragEnd,
+    return Listener(
+      onPointerDown: _onDragStart,
+      onPointerMove: _onDragUpdate,
+      onPointerUp: _onDragEnd,
       child: AnimatedBuilder(
         animation: slidingAnimation,
         builder: (BuildContext context, Widget child) {
@@ -98,27 +109,47 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
       if (anchorIndex != -1 && widget.onSnap != null) {
         widget.onSnap(anchorIndex);
       }
+
+      if (slidingAnimation.value == widget.anchors.last) {
+        bottomSheetController.enableScroll();
+      }
     }
   }
 
-  void _onDragStart(DragStartDetails event) {
+  void _onDragStart(PointerDownEvent event) {
     if (!widget.isDraggable) return;
+
+    isDragJustStarted = true;
+
     // 1. Check if scroll available. If so, return
     // 2. Dismiss all running animations
   }
 
-  void _onDragUpdate(DragUpdateDetails event) {
+  void _onDragUpdate(PointerMoveEvent event) {
     if (!widget.isDraggable) return;
+
+    if (isDragJustStarted) {
+      if (isOpened && event.delta.dy > 0 && bottomSheetController.isScrollEnabled) {
+        bottomSheetController.disableScroll();
+      }
+      isDragJustStarted = false;
+    }
+
+    if (bottomSheetController.isDraggingLocked) return;
+
+    velocityTracker.addPosition(event.timeStamp, event.position);
     slidingAnimation.value -= event.delta.dy / (maxHeight - minHeight);
   }
 
-  void _onDragEnd(DragEndDetails event) {
-    if (!widget.isDraggable) return;
+  void _onDragEnd(PointerUpEvent event) {
+    if (!widget.isDraggable || bottomSheetController.isDraggingLocked) return;
 
     final y = slidingAnimation.value;
-    final velocity = event.velocity.pixelsPerSecond.dy;
+    final velocity = velocityTracker.getVelocity();
 
-    final snapPointIndex = _findPointToSnapIndex(y, velocity);
+    final velocityY = velocity.pixelsPerSecond.dy;
+
+    final snapPointIndex = _findPointToSnapIndex(y, velocityY);
     snapTo(snapPointIndex);
   }
 

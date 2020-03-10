@@ -33,7 +33,7 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
     controller = JustBottomSheetController();
 
     Future.delayed(const Duration(seconds: 3), () {
-      controller.snapTo(2);
+      // controller.snapTo(2);
     });
 
     super.initState();
@@ -54,6 +54,12 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
             controller: controller,
             child: Column(
               children: <Widget>[
+                Container(
+                  width: 100,
+                  height: 100,
+                  margin: EdgeInsets.all(16),
+                  color: Color(0xFFFF0000),
+                ),
                 Container(
                   width: 100,
                   height: 100,

@@ -14,15 +14,9 @@ class ListContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final innerController = BottomSheetInnerControllerProvider.of(context);
 
-    return StreamBuilder(
-      stream: innerController.isScrollLockedStream,
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        final isScrollLocked = snapshot.data;
-        return ListView(
-          physics: isScrollLocked ? NeverScrollableScrollPhysics() : AlwaysScrollableScrollPhysics(),
-          children: children,
-        );
-      },
+    return ListView(
+      controller: innerController.scrollController,
+      children: children,
     );
   }
 }

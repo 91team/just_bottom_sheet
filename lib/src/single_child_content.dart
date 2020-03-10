@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:just_bottom_sheet/src/inner_controller_provider.dart';
 
 class SingleChildContent extends StatelessWidget {
   final Widget child;
@@ -10,8 +11,10 @@ class SingleChildContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final innerController = BottomSheetInnerControllerProvider.of(context);
+
     return SingleChildScrollView(
-      physics: NeverScrollableScrollPhysics(),
+      controller: innerController.scrollController,
       child: child,
     );
   }
