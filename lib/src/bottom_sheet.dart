@@ -4,13 +4,14 @@ import 'package:just_bottom_sheet/src/inner_controller_provider.dart';
 import 'package:just_bottom_sheet/src/list_content.dart';
 import 'package:just_bottom_sheet/src/single_child_content.dart';
 
+import 'list_builder_content.dart';
 import 'panel.dart';
 import 'sliding_behaviour.dart';
 
 class JustBottomSheet extends StatefulWidget {
   final Widget child;
   final List<Widget> children;
-  final Widget Function(BuildContext) builder;
+  final Widget Function(BuildContext, int) builder;
   final double minHeight;
   final double maxHeight;
   final List<double> anchors;
@@ -21,7 +22,7 @@ class JustBottomSheet extends StatefulWidget {
   final JustBottomSheetController controller;
   final int initialAnchorIndex;
 
-  JustBottomSheet.singleChild({
+  const JustBottomSheet.singleChild({
     @required this.child,
     @required this.minHeight,
     @required this.maxHeight,
@@ -37,7 +38,7 @@ class JustBottomSheet extends StatefulWidget {
         builder = null,
         super(key: key);
 
-  JustBottomSheet.listBuilder({
+  const JustBottomSheet.listBuilder({
     @required this.builder,
     @required this.minHeight,
     @required this.maxHeight,
@@ -53,7 +54,7 @@ class JustBottomSheet extends StatefulWidget {
         child = null,
         super(key: key);
 
-  JustBottomSheet.list({
+  const JustBottomSheet.list({
     @required this.children,
     @required this.minHeight,
     @required this.maxHeight,
@@ -124,7 +125,11 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
       return ListContent(children: widget.children);
     }
 
-    throw Exception("No child, children or builder provided. Check _selectChild in _JustBottomSheetState");
+    if (widget.builder != null) {
+      return ListBuilderContent(itemBuilder: widget.builder);
+    }
+
+    throw Exception('No child, children or builder provided. Check _selectChild in _JustBottomSheetState');
   }
 
   bool get _isSliding => slidingBehaviourController.isSliding;

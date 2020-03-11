@@ -18,7 +18,7 @@ class SlidingBehaviour extends StatefulWidget {
   final bool isDraggable;
   final int initialAnchorIndex;
 
-  SlidingBehaviour({
+  const SlidingBehaviour({
     @required this.child,
     @required this.controller,
     @required this.minHeight,
@@ -98,6 +98,16 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
     super.dispose();
   }
 
+  Future<void> snapTo(int anchorIndex) {
+    final positionToAnimate = widget.anchors[anchorIndex];
+
+    return slidingAnimation.animateTo(
+      positionToAnimate,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    );
+  }
+
   void _onSlide() {
     if (widget.onSlide != null) {
       widget.onSlide(slidingAnimation.value);
@@ -107,7 +117,7 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
   void _onSlideAnimationStatusChanged(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
       final anchorIndex = widget.anchors.indexWhere((anchor) => anchor == slidingAnimation.value);
-      if (anchorIndex != -1 && widget.onSnap != null) {
+      if (anchorIndex != NOT_FOUND && widget.onSnap != null) {
         widget.onSnap(anchorIndex);
       }
 
@@ -118,16 +128,21 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
   }
 
   void _onDragStart(PointerDownEvent event) {
-    if (!widget.isDraggable) return;
+    if (!widget.isDraggable) {
+      return;
+    }
 
     isDragJustStarted = true;
 
-    // 1. Check if scroll available. If so, return
-    // 2. Dismiss all running animations
+    if (slidingAnimation.isAnimating) {
+      slidingAnimation.stop();
+    }
   }
 
   void _onDragUpdate(PointerMoveEvent event) {
-    if (!widget.isDraggable) return;
+    if (!widget.isDraggable) {
+      return;
+    }
 
     if (isDragJustStarted) {
       if (isOpened &&
@@ -139,14 +154,18 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
       isDragJustStarted = false;
     }
 
-    if (bottomSheetController.isDraggingLocked) return;
+    if (bottomSheetController.isDraggingLocked) {
+      return;
+    }
 
     velocityTracker.addPosition(event.timeStamp, event.position);
     slidingAnimation.value -= event.delta.dy / (maxHeight - minHeight);
   }
 
   void _onDragEnd(PointerUpEvent event) {
-    if (!widget.isDraggable || bottomSheetController.isDraggingLocked) return;
+    if (!widget.isDraggable || bottomSheetController.isDraggingLocked) {
+      return;
+    }
 
     final y = slidingAnimation.value;
     final velocity = velocityTracker.getVelocity();
@@ -166,16 +185,6 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
     } else {
       return bottomAnchorIndex == NOT_FOUND ? 0 : bottomAnchorIndex;
     }
-  }
-
-  Future<void> snapTo(int anchorIndex) {
-    final positionToAnimate = widget.anchors[anchorIndex];
-
-    return slidingAnimation.animateTo(
-      positionToAnimate,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOut,
-    );
   }
 }
 

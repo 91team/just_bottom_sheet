@@ -5,7 +5,7 @@ class Background extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image(
+    return const Image(
       image: NetworkImage('https://techrocks.ru/wp-content/uploads/2019/10/Google-Maps-API-min-1024x610.png'),
       fit: BoxFit.cover,
     );

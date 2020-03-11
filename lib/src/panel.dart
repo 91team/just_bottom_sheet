@@ -17,7 +17,7 @@ class Panel extends StatelessWidget {
     return SizedBox(
       height: height,
       child: DecoratedBox(
-        decoration: decoration ?? BoxDecoration(color: Color(0xFFFFFFFF)),
+        decoration: decoration ?? const BoxDecoration(color: Color(0xFFFFFFFF)),
         child: child,
       ),
     );

@@ -12,7 +12,7 @@ class BottomSheetInnerController {
   bool get isScrollDisabled => !isScrollEnabled;
   bool get isDraggingLocked => isScrollEnabled;
 
-  _onScroll() {
+  void _onScroll() {
     if (isScrollDisabled) {
       scrollController.jumpTo(0);
     }

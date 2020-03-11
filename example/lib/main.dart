@@ -13,13 +13,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: JustBottomSheetExample(),
+      home: const JustBottomSheetExample(),
     );
   }
 }
 
 class JustBottomSheetExample extends StatefulWidget {
-  JustBottomSheetExample({Key key}) : super(key: key);
+  const JustBottomSheetExample({Key key}) : super(key: key);
 
   @override
   _JustBottomSheetExampleState createState() => _JustBottomSheetExampleState();
@@ -45,11 +45,11 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Background(),
+          const Background(),
           JustBottomSheet.singleChild(
             minHeight: 200,
             maxHeight: 600,
-            anchors: [0, 0.5, 1],
+            anchors: const [0, 0.5, 1],
             onSnap: _onSnap,
             controller: controller,
             child: Column(
@@ -57,32 +57,32 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
                 Container(
                   width: 100,
                   height: 100,
-                  margin: EdgeInsets.all(16),
-                  color: Color(0xFFFF0000),
+                  margin: const EdgeInsets.all(16),
+                  color: const Color(0xFFFF0000),
                 ),
                 Container(
                   width: 100,
                   height: 100,
-                  margin: EdgeInsets.all(16),
-                  color: Color(0xFFFF0000),
+                  margin: const EdgeInsets.all(16),
+                  color: const Color(0xFFFF0000),
                 ),
                 Container(
                   width: 100,
                   height: 100,
-                  margin: EdgeInsets.all(16),
-                  color: Color(0xFFFF0000),
+                  margin: const EdgeInsets.all(16),
+                  color: const Color(0xFFFF0000),
                 ),
                 Container(
                   width: 100,
                   height: 100,
-                  margin: EdgeInsets.all(16),
-                  color: Color(0xFFFF0000),
+                  margin: const EdgeInsets.all(16),
+                  color: const Color(0xFFFF0000),
                 ),
                 Container(
                   width: 100,
                   height: 100,
-                  margin: EdgeInsets.all(16),
-                  color: Color(0xFFFF0000),
+                  margin: const EdgeInsets.all(16),
+                  color: const Color(0xFFFF0000),
                 ),
               ],
             ),

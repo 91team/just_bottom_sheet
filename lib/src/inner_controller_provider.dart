@@ -6,9 +6,9 @@ class BottomSheetInnerControllerProvider extends InheritedWidget {
   final BottomSheetInnerController controller;
 
   const BottomSheetInnerControllerProvider({
-    Key key,
     @required this.controller,
     @required Widget child,
+    Key key,
   })  : assert(child != null),
         super(key: key, child: child);
 
@@ -17,5 +17,5 @@ class BottomSheetInnerControllerProvider extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(BottomSheetInnerControllerProvider old) => false;
+  bool updateShouldNotify(BottomSheetInnerControllerProvider oldWidget) => false;
 }
