@@ -45,6 +45,7 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
 
   double get minHeight => widget.minHeight;
   double get maxHeight => widget.maxHeight;
+  double get currentSheetHeight => slidingAnimation.value * (maxHeight - minHeight) + minHeight;
 
   double get currentBottomSheetPosition => slidingAnimation.value;
   bool get isSliding => slidingAnimation.isAnimating;
@@ -82,7 +83,7 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
         animation: slidingAnimation,
         builder: (BuildContext context, Widget child) {
           return SizedBox(
-            height: _calculateSheetHeight(),
+            height: currentSheetHeight,
             child: child,
           );
         },
@@ -129,7 +130,10 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
     if (!widget.isDraggable) return;
 
     if (isDragJustStarted) {
-      if (isOpened && event.delta.dy > 0 && bottomSheetController.isScrollEnabled) {
+      if (isOpened &&
+          event.delta.dy > 0 &&
+          bottomSheetController.isScrollEnabled &&
+          bottomSheetController.scrollController.offset <= 0) {
         bottomSheetController.disableScroll();
       }
       isDragJustStarted = false;
@@ -162,10 +166,6 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
     } else {
       return bottomAnchorIndex == NOT_FOUND ? 0 : bottomAnchorIndex;
     }
-  }
-
-  double _calculateSheetHeight() {
-    return slidingAnimation.value * (maxHeight - minHeight) + minHeight;
   }
 
   Future<void> snapTo(int anchorIndex) {
