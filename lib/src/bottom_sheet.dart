@@ -21,6 +21,7 @@ class JustBottomSheet extends StatefulWidget {
   final bool isDraggable;
   final JustBottomSheetController controller;
   final int initialAnchorIndex;
+  final bool wrapPositioned;
 
   const JustBottomSheet.singleChild({
     @required this.child,
@@ -30,11 +31,13 @@ class JustBottomSheet extends StatefulWidget {
     this.controller,
     this.anchors = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
+    this.wrapPositioned = true,
     this.onSlide,
     this.onSnap,
     this.panelDecoration,
     Key key,
-  })  : children = null,
+  })  : assert(child != null),
+        children = null,
         builder = null,
         super(key: key);
 
@@ -46,11 +49,13 @@ class JustBottomSheet extends StatefulWidget {
     this.controller,
     this.anchors = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
+    this.wrapPositioned = true,
     this.onSlide,
     this.onSnap,
     this.panelDecoration,
     Key key,
-  })  : children = null,
+  })  : assert(builder != null),
+        children = null,
         child = null,
         super(key: key);
 
@@ -62,11 +67,13 @@ class JustBottomSheet extends StatefulWidget {
     this.controller,
     this.anchors = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
+    this.wrapPositioned = true,
     this.onSlide,
     this.onSnap,
     this.panelDecoration,
     Key key,
-  })  : builder = null,
+  })  : assert(children != null),
+        builder = null,
         child = null,
         super(key: key);
 
@@ -92,28 +99,34 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 0,
-      width: MediaQuery.of(context).size.width,
-      child: BottomSheetInnerControllerProvider(
-        controller: innerController,
-        child: SlidingBehaviour(
-          minHeight: widget.minHeight,
-          maxHeight: widget.maxHeight,
-          anchors: widget.anchors,
-          onSlide: widget.onSlide,
-          onSnap: widget.onSnap,
-          isDraggable: widget.isDraggable,
-          initialAnchorIndex: widget.initialAnchorIndex,
-          controller: slidingBehaviourController,
-          child: Panel(
-            height: widget.maxHeight,
-            decoration: widget.panelDecoration,
-            child: _selectChild(),
-          ),
+    final bottomSheet = BottomSheetInnerControllerProvider(
+      controller: innerController,
+      child: SlidingBehaviour(
+        minHeight: widget.minHeight,
+        maxHeight: widget.maxHeight,
+        anchors: widget.anchors,
+        onSlide: widget.onSlide,
+        onSnap: widget.onSnap,
+        isDraggable: widget.isDraggable,
+        initialAnchorIndex: widget.initialAnchorIndex,
+        controller: slidingBehaviourController,
+        child: Panel(
+          height: widget.maxHeight,
+          decoration: widget.panelDecoration,
+          child: _selectChild(),
         ),
       ),
     );
+
+    if (widget.wrapPositioned) {
+      return Positioned(
+        child: bottomSheet,
+        bottom: 0,
+        width: MediaQuery.of(context).size.width,
+      );
+    } else {
+      return bottomSheet;
+    }
   }
 
   Widget _selectChild() {
