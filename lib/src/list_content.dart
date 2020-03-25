@@ -3,9 +3,11 @@ import 'package:flutter/widgets.dart';
 import 'inner_controller_provider.dart';
 
 class ListContent extends StatelessWidget {
+  final EdgeInsets padding;
   final List<Widget> children;
 
   const ListContent({
+    @required this.padding,
     @required this.children,
     Key key,
   }) : super(key: key);
@@ -17,6 +19,7 @@ class ListContent extends StatelessWidget {
     return ListView(
       controller: innerController.scrollController,
       children: children,
+      padding: padding,
     );
   }
 }

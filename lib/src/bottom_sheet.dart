@@ -16,6 +16,7 @@ class JustBottomSheet extends StatefulWidget {
   final Widget Function(BuildContext, ScrollController) builder;
   final double minHeight;
   final double maxHeight;
+  final EdgeInsets padding;
   final List<double> anchors;
   final Function(double value) onSlide;
   final Function(int anchorIndex) onSnap;
@@ -37,6 +38,7 @@ class JustBottomSheet extends StatefulWidget {
     this.onSlide,
     this.onSnap,
     this.panelDecoration,
+    this.padding,
     Key key,
   })  : assert(child != null),
         children = null,
@@ -56,6 +58,7 @@ class JustBottomSheet extends StatefulWidget {
     this.onSlide,
     this.onSnap,
     this.panelDecoration,
+    this.padding,
     Key key,
   })  : assert(itemBuilder != null),
         children = null,
@@ -75,6 +78,7 @@ class JustBottomSheet extends StatefulWidget {
     this.onSlide,
     this.onSnap,
     this.panelDecoration,
+    this.padding,
     Key key,
   })  : assert(children != null),
         itemBuilder = null,
@@ -99,6 +103,7 @@ class JustBottomSheet extends StatefulWidget {
         itemBuilder = null,
         child = null,
         children = null,
+        padding = null,
         super(key: key);
 
   @override
@@ -155,15 +160,15 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
 
   Widget _selectChild() {
     if (widget.child != null) {
-      return SingleChildContent(child: widget.child);
+      return SingleChildContent(child: widget.child, padding: widget.padding);
     }
 
     if (widget.children != null) {
-      return ListContent(children: widget.children);
+      return ListContent(children: widget.children, padding: widget.padding);
     }
 
     if (widget.itemBuilder != null) {
-      return ListBuilderContent(itemBuilder: widget.itemBuilder);
+      return ListBuilderContent(itemBuilder: widget.itemBuilder, padding: widget.padding);
     }
 
     if (widget.builder != null) {
