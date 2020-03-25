@@ -70,6 +70,9 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
 
     Future.delayed(Duration.zero, () {
       bottomSheetController = BottomSheetInnerControllerProvider.of(context);
+      if (widget.initialAnchorIndex == widget.anchors.length - 1) {
+        bottomSheetController.enableScroll();
+      }
     });
   }
 
