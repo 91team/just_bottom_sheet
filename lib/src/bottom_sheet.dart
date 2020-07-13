@@ -7,7 +7,7 @@ import 'package:just_bottom_sheet/src/single_child_content.dart';
 import 'custom_builder_content.dart';
 import 'list_builder_content.dart';
 import 'panel.dart';
-import 'sliding_behaviour.dart';
+import 'sliding_behavior.dart';
 
 class JustBottomSheet extends StatefulWidget {
   final Widget child;
@@ -112,7 +112,7 @@ class JustBottomSheet extends StatefulWidget {
 
 class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProviderStateMixin {
   BottomSheetInnerController innerController;
-  SlidingBehaviourController slidingBehaviourController;
+  SlidingBehaviorController slidingBehaviorController;
 
   @override
   void initState() {
@@ -121,7 +121,7 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
     }
 
     innerController = BottomSheetInnerController();
-    slidingBehaviourController = SlidingBehaviourController();
+    slidingBehaviorController = SlidingBehaviorController();
 
     super.initState();
   }
@@ -130,7 +130,7 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
   Widget build(BuildContext context) {
     final bottomSheet = BottomSheetInnerControllerProvider(
       controller: innerController,
-      child: SlidingBehaviour(
+      child: SlidingBehavior(
         minHeight: widget.minHeight,
         maxHeight: widget.maxHeight,
         anchors: widget.anchors,
@@ -138,7 +138,7 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
         onSnap: widget.onSnap,
         isDraggable: widget.isDraggable,
         initialAnchorIndex: widget.initialAnchorIndex,
-        controller: slidingBehaviourController,
+        controller: slidingBehaviorController,
         child: Panel(
           height: widget.maxHeight,
           decoration: widget.panelDecoration,
@@ -178,11 +178,11 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
     throw Exception('JustBottomSheet: No child, children or builders provided');
   }
 
-  bool get _isSliding => slidingBehaviourController.isSliding;
-  double get _currentBottomSheetPosition => slidingBehaviourController.currentBottomSheetPosition;
+  bool get _isSliding => slidingBehaviorController.isSliding;
+  double get _currentBottomSheetPosition => slidingBehaviorController.currentBottomSheetPosition;
 
   void _snapTo(int snapPointIndex) {
-    slidingBehaviourController.snapTo(snapPointIndex);
+    slidingBehaviorController.snapTo(snapPointIndex);
   }
 }
 

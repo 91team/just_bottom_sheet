@@ -6,19 +6,19 @@ import 'inner_controller_provider.dart';
 
 const NOT_FOUND = -1;
 
-class SlidingBehaviour extends StatefulWidget {
+class SlidingBehavior extends StatefulWidget {
   final Widget child;
-  final SlidingBehaviourController controller;
+  final SlidingBehaviorController controller;
 
   final double minHeight;
   final double maxHeight;
   final List<double> anchors;
-  final Function(double value) onSlide;
-  final Function(int anchorIndex) onSnap;
+  final void Function(double value) onSlide;
+  final void Function(int anchorIndex) onSnap;
   final bool isDraggable;
   final int initialAnchorIndex;
 
-  const SlidingBehaviour({
+  const SlidingBehavior({
     @required this.child,
     @required this.controller,
     @required this.minHeight,
@@ -32,10 +32,10 @@ class SlidingBehaviour extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _SlidingBehaviourState createState() => _SlidingBehaviourState();
+  _SlidingBehaviorState createState() => _SlidingBehaviorState();
 }
 
-class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerProviderStateMixin {
+class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProviderStateMixin {
   AnimationController slidingAnimation;
   BottomSheetInnerController bottomSheetController;
   VelocityTracker velocityTracker;
@@ -191,17 +191,17 @@ class _SlidingBehaviourState extends State<SlidingBehaviour> with SingleTickerPr
   }
 }
 
-class SlidingBehaviourController {
-  _SlidingBehaviourState slidingBehaviour;
+class SlidingBehaviorController {
+  _SlidingBehaviorState slidingBehavior;
 
-  bool get isSliding => slidingBehaviour.isSliding;
-  double get currentBottomSheetPosition => slidingBehaviour.currentBottomSheetPosition;
+  bool get isSliding => slidingBehavior.isSliding;
+  double get currentBottomSheetPosition => slidingBehavior.currentBottomSheetPosition;
 
   void snapTo(int snapPointIndex) {
-    slidingBehaviour.snapTo(snapPointIndex);
+    slidingBehavior.snapTo(snapPointIndex);
   }
 
-  void _attach(_SlidingBehaviourState behavour) {
-    slidingBehaviour = behavour;
+  void _attach(_SlidingBehaviorState behavior) {
+    slidingBehavior = behavior;
   }
 }
