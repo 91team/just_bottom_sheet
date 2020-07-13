@@ -102,6 +102,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.4"
+  pedantic91:
+    dependency: "direct dev"
+    description:
+      path: "."
+      ref: "v0.1.2"
+      resolved-ref: "42c5ab171664cce7c7611f4e09ccbd10c3c7cfe4"
+      url: "https://github.com/91team/pedantic91.git"
+    source: git
+    version: "0.1.2"
   petitparser:
     dependency: transitive
     description:
@@ -185,4 +194,4 @@ packages:
     source: hosted
     version: "3.6.1"
 sdks:
-  dart: ">=2.6.0 <3.0.0"
+  dart: ">=2.7.2 <3.0.0"

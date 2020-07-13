@@ -12,6 +12,10 @@ dependencies:
     path: ../
 
 dev_dependencies:
+  pedantic91:
+    git:
+      url: https://github.com/91team/pedantic91.git
+      ref: v0.1.2
   flutter_test:
     sdk: flutter
 
