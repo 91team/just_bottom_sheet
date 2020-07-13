@@ -9,7 +9,7 @@ class Panel extends StatelessWidget {
     @required this.child,
     @required this.height,
     this.decoration,
-    key,
+    Key key,
   }) : super(key: key);
 
   @override

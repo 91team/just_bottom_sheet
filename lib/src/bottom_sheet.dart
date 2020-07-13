@@ -18,8 +18,8 @@ class JustBottomSheet extends StatefulWidget {
   final double maxHeight;
   final EdgeInsets padding;
   final List<double> anchors;
-  final Function(double value) onSlide;
-  final Function(int anchorIndex) onSnap;
+  final void Function(double value) onSlide;
+  final void Function(int anchorIndex) onSnap;
   final BoxDecoration panelDecoration;
   final bool isDraggable;
   final JustBottomSheetController controller;
