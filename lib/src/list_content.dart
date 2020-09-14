@@ -18,8 +18,8 @@ class ListContent extends StatelessWidget {
 
     return ListView(
       controller: innerController.scrollController,
-      children: children,
       padding: padding,
+      children: children,
     );
   }
 }

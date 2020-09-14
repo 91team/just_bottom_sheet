@@ -13,6 +13,7 @@ class JustBottomSheet extends StatefulWidget {
   final Widget child;
   final List<Widget> children;
   final Widget Function(BuildContext, int) itemBuilder;
+  final int itemCount;
   final Widget Function(BuildContext, ScrollController) builder;
   final double minHeight;
   final double maxHeight;
@@ -43,11 +44,13 @@ class JustBottomSheet extends StatefulWidget {
   })  : assert(child != null),
         children = null,
         itemBuilder = null,
+        itemCount = 0,
         builder = null,
         super(key: key);
 
   const JustBottomSheet.listBuilder({
     @required this.itemBuilder,
+    @required this.itemCount,
     @required this.minHeight,
     @required this.maxHeight,
     this.isDraggable = true,
@@ -82,6 +85,7 @@ class JustBottomSheet extends StatefulWidget {
     Key key,
   })  : assert(children != null),
         itemBuilder = null,
+        itemCount = null,
         child = null,
         builder = null,
         super(key: key);
@@ -101,6 +105,7 @@ class JustBottomSheet extends StatefulWidget {
     Key key,
   })  : assert(builder != null),
         itemBuilder = null,
+        itemCount = null,
         child = null,
         children = null,
         padding = null,
@@ -149,9 +154,9 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
 
     if (widget.wrapPositioned) {
       return Positioned(
-        child: bottomSheet,
         bottom: 0,
         width: MediaQuery.of(context).size.width,
+        child: bottomSheet,
       );
     } else {
       return bottomSheet;
@@ -160,15 +165,15 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
 
   Widget _selectChild() {
     if (widget.child != null) {
-      return SingleChildContent(child: widget.child, padding: widget.padding);
+      return SingleChildContent(padding: widget.padding, child: widget.child);
     }
 
     if (widget.children != null) {
-      return ListContent(children: widget.children, padding: widget.padding);
+      return ListContent(padding: widget.padding, children: widget.children);
     }
 
     if (widget.itemBuilder != null) {
-      return ListBuilderContent(itemBuilder: widget.itemBuilder, padding: widget.padding);
+      return ListBuilderContent(itemBuilder: widget.itemBuilder, padding: widget.padding, itemCount: widget.itemCount);
     }
 
     if (widget.builder != null) {

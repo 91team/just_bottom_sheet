@@ -17,8 +17,8 @@ class SingleChildContent extends StatelessWidget {
 
     return SingleChildScrollView(
       controller: innerController.scrollController,
-      child: child,
       padding: padding,
+      child: child,
     );
   }
 }
