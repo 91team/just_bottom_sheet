@@ -4,7 +4,7 @@ import 'package:just_bottom_sheet/src/inner_controller.dart';
 
 import 'inner_controller_provider.dart';
 
-const NOT_FOUND = -1;
+const _kNotFound = -1;
 
 class SlidingBehavior extends StatefulWidget {
   final Widget child;
@@ -38,7 +38,7 @@ class SlidingBehavior extends StatefulWidget {
 class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProviderStateMixin {
   AnimationController slidingAnimation;
   BottomSheetInnerController bottomSheetController;
-  VelocityTracker velocityTracker;
+  final velocityTracker = VelocityTracker();
   int currentSnapPoint;
 
   bool isDragJustStarted = false;
@@ -62,8 +62,6 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
     slidingAnimation.addListener(_onSlide);
     slidingAnimation.addStatusListener(_onSlideAnimationStatusChanged);
 
-    velocityTracker = VelocityTracker();
-
     widget.controller._attach(this);
 
     super.initState();
@@ -84,12 +82,10 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
       onPointerUp: _onDragEnd,
       child: AnimatedBuilder(
         animation: slidingAnimation,
-        builder: (BuildContext context, Widget child) {
-          return SizedBox(
-            height: currentSheetHeight,
-            child: child,
-          );
-        },
+        builder: (context, child) => SizedBox(
+          height: currentSheetHeight,
+          child: child,
+        ),
         child: widget.child,
       ),
     );
@@ -120,7 +116,7 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
   void _onSlideAnimationStatusChanged(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
       final anchorIndex = widget.anchors.indexWhere((anchor) => anchor == slidingAnimation.value);
-      if (anchorIndex != NOT_FOUND && widget.onSnap != null) {
+      if (anchorIndex != _kNotFound && widget.onSnap != null) {
         widget.onSnap(anchorIndex);
       }
 
@@ -180,14 +176,22 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
   }
 
   int _findPointToSnapIndex(double currentValue, double velocity) {
-    final upperAnchorIndex = widget.anchors.indexWhere((anchor) => anchor >= currentValue);
-    final bottomAnchorIndex = widget.anchors.lastIndexWhere((anchor) => anchor < currentValue);
+    final anchorsCopy = <double>[...widget.anchors];
 
-    if (velocity < 0 && upperAnchorIndex != NOT_FOUND) {
-      return upperAnchorIndex;
-    } else {
-      return bottomAnchorIndex == NOT_FOUND ? 0 : bottomAnchorIndex;
-    }
+    anchorsCopy.sort((a, b) => (a - currentValue).abs().compareTo((b - currentValue).abs()));
+
+    final nearestAnchorIndex = widget.anchors.indexOf(anchorsCopy.first);
+
+    return nearestAnchorIndex;
+
+    // final upperAnchorIndex = widget.anchors.indexWhere((anchor) => anchor >= currentValue);
+    // final bottomAnchorIndex = widget.anchors.lastIndexWhere((anchor) => anchor < currentValue);
+
+    // if (velocity < 0 && upperAnchorIndex != _kNotFound) {
+    //   return upperAnchorIndex;
+    // } else {
+    //   return bottomAnchorIndex == _kNotFound ? 0 : bottomAnchorIndex;
+    // }
   }
 }
 
