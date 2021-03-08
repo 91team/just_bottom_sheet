@@ -4,12 +4,13 @@ import 'inner_controller_provider.dart';
 
 class ListContent extends StatelessWidget {
   final EdgeInsets padding;
+
   final List<Widget> children;
 
   const ListContent({
-    @required this.padding,
-    @required this.children,
-    Key key,
+    required this.padding,
+    required this.children,
+    Key? key,
   }) : super(key: key);
 
   @override

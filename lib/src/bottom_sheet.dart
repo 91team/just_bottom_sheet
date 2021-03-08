@@ -9,106 +9,121 @@ import 'list_builder_content.dart';
 import 'panel.dart';
 import 'sliding_behavior.dart';
 
+typedef ListItemBuilder = Widget Function(BuildContext context, int index);
+
+typedef CustomBottomSheetBuilder = Widget Function(BuildContext context, ScrollController scrollController);
+
 class JustBottomSheet extends StatefulWidget {
-  final Widget child;
-  final List<Widget> children;
-  final Widget Function(BuildContext, int) itemBuilder;
-  final int itemCount;
-  final Widget Function(BuildContext, ScrollController) builder;
+  final Widget? child;
+
+  final List<Widget>? children;
+
+  final ListItemBuilder? itemBuilder;
+
+  final int? itemCount;
+
+  final CustomBottomSheetBuilder? builder;
+
   final double minHeight;
+
   final double maxHeight;
+
   final EdgeInsets padding;
+
   final List<double> anchors;
-  final void Function(double value) onSlide;
-  final void Function(int anchorIndex) onSnap;
+
+  final OnSlideCallback? onSlide;
+
+  final OnSnapCallback? onSnap;
+
   final BoxDecoration panelDecoration;
+
   final bool isDraggable;
+
   final JustBottomSheetController controller;
+
   final int initialAnchorIndex;
+
   final bool wrapPositioned;
 
   const JustBottomSheet.singleChild({
-    @required this.child,
-    @required this.minHeight,
-    @required this.maxHeight,
+    required Widget this.child,
+    required this.minHeight,
+    required this.maxHeight,
+    required this.controller,
+    required this.panelDecoration,
     this.isDraggable = true,
-    this.controller,
     this.anchors = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
     this.wrapPositioned = true,
     this.onSlide,
     this.onSnap,
-    this.panelDecoration,
-    this.padding,
-    Key key,
-  })  : assert(child != null),
-        children = null,
+    this.padding = EdgeInsets.zero,
+    Key? key,
+  })  : children = null,
         itemBuilder = null,
         itemCount = 0,
         builder = null,
         super(key: key);
 
   const JustBottomSheet.listBuilder({
-    @required this.itemBuilder,
-    @required this.itemCount,
-    @required this.minHeight,
-    @required this.maxHeight,
+    required ListItemBuilder this.itemBuilder,
+    required int this.itemCount,
+    required this.minHeight,
+    required this.maxHeight,
+    required this.controller,
+    required this.panelDecoration,
     this.isDraggable = true,
-    this.controller,
     this.anchors = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
     this.wrapPositioned = true,
     this.onSlide,
     this.onSnap,
-    this.panelDecoration,
-    this.padding,
-    Key key,
-  })  : assert(itemBuilder != null),
-        children = null,
+    this.padding = EdgeInsets.zero,
+    Key? key,
+  })  : children = null,
         child = null,
         builder = null,
         super(key: key);
 
   const JustBottomSheet.list({
-    @required this.children,
-    @required this.minHeight,
-    @required this.maxHeight,
+    required List<Widget> this.children,
+    required this.minHeight,
+    required this.maxHeight,
+    required this.controller,
+    required this.panelDecoration,
     this.isDraggable = true,
-    this.controller,
     this.anchors = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
     this.wrapPositioned = true,
     this.onSlide,
     this.onSnap,
-    this.panelDecoration,
-    this.padding,
-    Key key,
-  })  : assert(children != null),
-        itemBuilder = null,
+    this.padding = EdgeInsets.zero,
+    Key? key,
+  })  : itemBuilder = null,
         itemCount = null,
         child = null,
         builder = null,
         super(key: key);
 
   const JustBottomSheet.custom({
-    @required this.builder,
-    @required this.minHeight,
-    @required this.maxHeight,
+    required CustomBottomSheetBuilder this.builder,
+    required this.minHeight,
+    required this.maxHeight,
+    required this.controller,
+    required this.panelDecoration,
     this.isDraggable = true,
-    this.controller,
     this.anchors = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
     this.wrapPositioned = true,
     this.onSlide,
     this.onSnap,
-    this.panelDecoration,
-    Key key,
-  })  : assert(builder != null),
-        itemBuilder = null,
+    Key? key,
+  })  : itemBuilder = null,
         itemCount = null,
         child = null,
         children = null,
-        padding = null,
+        padding = EdgeInsets.zero,
         super(key: key);
 
   @override
@@ -116,17 +131,12 @@ class JustBottomSheet extends StatefulWidget {
 }
 
 class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProviderStateMixin {
-  BottomSheetInnerController innerController;
-  SlidingBehaviorController slidingBehaviorController;
+  final innerController = BottomSheetInnerController();
+  final slidingBehaviorController = SlidingBehaviorController();
 
   @override
   void initState() {
-    if (widget.controller != null) {
-      widget.controller._attach(this);
-    }
-
-    innerController = BottomSheetInnerController();
-    slidingBehaviorController = SlidingBehaviorController();
+    widget.controller._attach(this);
 
     super.initState();
   }
@@ -165,19 +175,31 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
 
   Widget _selectChild() {
     if (widget.child != null) {
-      return SingleChildContent(padding: widget.padding, child: widget.child);
+      return SingleChildContent(
+        padding: widget.padding,
+        child: widget.child!,
+      );
     }
 
     if (widget.children != null) {
-      return ListContent(padding: widget.padding, children: widget.children);
+      return ListContent(
+        padding: widget.padding,
+        children: widget.children!,
+      );
     }
 
     if (widget.itemBuilder != null) {
-      return ListBuilderContent(itemBuilder: widget.itemBuilder, padding: widget.padding, itemCount: widget.itemCount);
+      return ListBuilderContent(
+        itemBuilder: widget.itemBuilder!,
+        padding: widget.padding,
+        itemCount: widget.itemCount!,
+      );
     }
 
     if (widget.builder != null) {
-      return CustomBuilderContent(builder: widget.builder);
+      return CustomBuilderContent(
+        builder: widget.builder!,
+      );
     }
 
     throw Exception('JustBottomSheet: No child, children or builders provided');
@@ -192,7 +214,7 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
 }
 
 class JustBottomSheetController {
-  _JustBottomSheetState bottomSheet;
+  late _JustBottomSheetState bottomSheet;
 
   bool get isSliding => bottomSheet._isSliding;
   double get currentBottomSheetPosition => bottomSheet._currentBottomSheetPosition;

@@ -4,14 +4,16 @@ import 'inner_controller_provider.dart';
 
 class ListBuilderContent extends StatelessWidget {
   final EdgeInsets padding;
+
   final Widget Function(BuildContext, int) itemBuilder;
+
   final int itemCount;
 
   const ListBuilderContent({
-    @required this.padding,
-    @required this.itemBuilder,
-    @required this.itemCount,
-    Key key,
+    required this.padding,
+    required this.itemBuilder,
+    required this.itemCount,
+    Key? key,
   }) : super(key: key);
 
   @override

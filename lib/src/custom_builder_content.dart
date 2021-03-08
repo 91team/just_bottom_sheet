@@ -6,8 +6,8 @@ class CustomBuilderContent extends StatelessWidget {
   final Widget Function(BuildContext, ScrollController) builder;
 
   const CustomBuilderContent({
-    @required this.builder,
-    Key key,
+    required this.builder,
+    Key? key,
   }) : super(key: key);
 
   @override
