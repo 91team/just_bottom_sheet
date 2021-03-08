@@ -1,1 +1,1 @@
-include: package:pedantic91/analysis_options_strong.yaml
+include: package:pedantic91/analysis_options.yaml
