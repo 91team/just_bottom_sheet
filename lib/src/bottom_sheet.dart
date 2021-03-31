@@ -44,7 +44,9 @@ class JustBottomSheet extends StatefulWidget {
 
   final int initialAnchorIndex;
 
-  final bool wrapPositioned;
+  final BorderRadius borderRadius;
+
+  final Clip clipBehavior;
 
   const JustBottomSheet.singleChild({
     required Widget this.child,
@@ -52,10 +54,11 @@ class JustBottomSheet extends StatefulWidget {
     required this.maxHeight,
     required this.controller,
     required this.panelDecoration,
+    this.borderRadius = BorderRadius.zero,
+    this.clipBehavior = Clip.hardEdge,
     this.isDraggable = true,
     this.anchors = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
-    this.wrapPositioned = true,
     this.onSlide,
     this.onSnap,
     this.padding = EdgeInsets.zero,
@@ -73,10 +76,11 @@ class JustBottomSheet extends StatefulWidget {
     required this.maxHeight,
     required this.controller,
     required this.panelDecoration,
+    this.borderRadius = BorderRadius.zero,
+    this.clipBehavior = Clip.hardEdge,
     this.isDraggable = true,
     this.anchors = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
-    this.wrapPositioned = true,
     this.onSlide,
     this.onSnap,
     this.padding = EdgeInsets.zero,
@@ -92,10 +96,11 @@ class JustBottomSheet extends StatefulWidget {
     required this.maxHeight,
     required this.controller,
     required this.panelDecoration,
+    this.borderRadius = BorderRadius.zero,
+    this.clipBehavior = Clip.hardEdge,
     this.isDraggable = true,
     this.anchors = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
-    this.wrapPositioned = true,
     this.onSlide,
     this.onSnap,
     this.padding = EdgeInsets.zero,
@@ -112,10 +117,11 @@ class JustBottomSheet extends StatefulWidget {
     required this.maxHeight,
     required this.controller,
     required this.panelDecoration,
+    this.borderRadius = BorderRadius.zero,
+    this.clipBehavior = Clip.hardEdge,
     this.isDraggable = true,
     this.anchors = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
-    this.wrapPositioned = true,
     this.onSlide,
     this.onSnap,
     Key? key,
@@ -143,7 +149,7 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
-    final bottomSheet = BottomSheetInnerControllerProvider(
+    return BottomSheetInnerControllerProvider(
       controller: innerController,
       child: SlidingBehavior(
         minHeight: widget.minHeight,
@@ -157,20 +163,14 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
         child: Panel(
           height: widget.maxHeight,
           decoration: widget.panelDecoration,
-          child: _selectChild(),
+          child: ClipRRect(
+            borderRadius: widget.borderRadius,
+            clipBehavior: widget.clipBehavior,
+            child: _selectChild(),
+          ),
         ),
       ),
     );
-
-    if (widget.wrapPositioned) {
-      return Positioned(
-        bottom: 0,
-        width: MediaQuery.of(context).size.width,
-        child: bottomSheet,
-      );
-    } else {
-      return bottomSheet;
-    }
   }
 
   Widget _selectChild() {

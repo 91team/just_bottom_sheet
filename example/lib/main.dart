@@ -37,45 +37,61 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
         fit: StackFit.expand,
         children: [
           const Background(),
-          JustBottomSheet.list(
-            panelDecoration: const BoxDecoration(color: Colors.white),
-            minHeight: 200,
-            maxHeight: 600,
-            anchors: const [0, 0.5, 1],
-            onSnap: _onSnap,
-            controller: controller,
-            children: <Widget>[
-              Container(
-                width: 100,
-                height: 100,
-                margin: const EdgeInsets.all(16),
-                color: const Color(0xFFFF0000),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: JustBottomSheet.list(
+              panelDecoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.white,
+                boxShadow: const <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.black26,
+                    spreadRadius: 1,
+                    blurRadius: 10,
+                  )
+                ],
               ),
-              Container(
-                width: 100,
-                height: 100,
-                margin: const EdgeInsets.all(16),
-                color: const Color(0xFFFF0000),
-              ),
-              Container(
-                width: 100,
-                height: 100,
-                margin: const EdgeInsets.all(16),
-                color: const Color(0xFFFF0000),
-              ),
-              Container(
-                width: 100,
-                height: 100,
-                margin: const EdgeInsets.all(16),
-                color: const Color(0xFFFF0000),
-              ),
-              Container(
-                width: 100,
-                height: 100,
-                margin: const EdgeInsets.all(16),
-                color: const Color(0xFFFF0000),
-              ),
-            ],
+              minHeight: 200,
+              maxHeight: 600,
+              anchors: const [0, 0.5, 1],
+              onSnap: _onSnap,
+              controller: controller,
+              borderRadius: BorderRadius.circular(16),
+              children: <Widget>[
+                Container(
+                  width: 100,
+                  height: 100,
+                  margin: const EdgeInsets.all(16),
+                  color: const Color(0xFFFF0000),
+                ),
+                Container(
+                  width: 100,
+                  height: 100,
+                  margin: const EdgeInsets.all(16),
+                  color: const Color(0xFFFF0000),
+                ),
+                Container(
+                  width: 100,
+                  height: 100,
+                  margin: const EdgeInsets.all(16),
+                  color: const Color(0xFFFF0000),
+                ),
+                Container(
+                  width: 100,
+                  height: 100,
+                  margin: const EdgeInsets.all(16),
+                  color: const Color(0xFFFF0000),
+                ),
+                Container(
+                  width: 100,
+                  height: 100,
+                  margin: const EdgeInsets.all(16),
+                  color: const Color(0xFFFF0000),
+                ),
+              ],
+            ),
           ),
         ],
       ),
