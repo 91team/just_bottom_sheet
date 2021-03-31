@@ -48,10 +48,10 @@ class SlidingBehavior extends StatefulWidget {
 
 class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProviderStateMixin {
   late final AnimationController _slidingAnimation;
-  late final BottomSheetInnerController bottomSheetController;
-  late int currentSnapPoint;
+  late final BottomSheetInnerController _bottomSheetController;
+  late int _currentSnapPoint;
 
-  bool isDragJustStarted = false;
+  bool _isDragJustStarted = false;
 
   double get minHeight => widget.minHeight;
   double get maxHeight => widget.maxHeight;
@@ -65,11 +65,11 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
   void initState() {
     super.initState();
 
-    currentSnapPoint = widget.initialAnchorIndex;
+    _currentSnapPoint = widget.initialAnchorIndex;
 
     _slidingAnimation = AnimationController(
       vsync: this,
-      value: widget.anchors[currentSnapPoint],
+      value: widget.anchors[_currentSnapPoint],
     );
 
     _slidingAnimation.addListener(_onSlide);
@@ -78,9 +78,9 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
     widget.controller._attach(this);
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
-      bottomSheetController = BottomSheetInnerControllerProvider.of(context);
+      _bottomSheetController = BottomSheetInnerControllerProvider.of(context);
       if (widget.initialAnchorIndex == widget.anchors.length - 1) {
-        bottomSheetController.enableScroll();
+        _bottomSheetController.enableScroll();
       }
     });
   }
@@ -130,7 +130,7 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
       }
 
       if (_slidingAnimation.value == widget.anchors.last) {
-        bottomSheetController.enableScroll();
+        _bottomSheetController.enableScroll();
       }
     }
   }
@@ -140,7 +140,7 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
       return;
     }
 
-    isDragJustStarted = true;
+    _isDragJustStarted = true;
 
     if (_slidingAnimation.isAnimating) {
       _slidingAnimation.stop();
@@ -152,17 +152,17 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
       return;
     }
 
-    if (isDragJustStarted) {
+    if (_isDragJustStarted) {
       if (isOpened &&
           event.delta.dy > 0 &&
-          bottomSheetController.isScrollEnabled &&
-          bottomSheetController.scrollController.offset <= 0) {
-        bottomSheetController.disableScroll();
+          _bottomSheetController.isScrollEnabled &&
+          _bottomSheetController.scrollController.offset <= 0) {
+        _bottomSheetController.disableScroll();
       }
-      isDragJustStarted = false;
+      _isDragJustStarted = false;
     }
 
-    if (bottomSheetController.isDraggingLocked) {
+    if (_bottomSheetController.isDraggingLocked) {
       return;
     }
 
@@ -170,7 +170,7 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
   }
 
   void _onDragEnd(PointerUpEvent event) {
-    if (!widget.isDraggable || bottomSheetController.isDraggingLocked) {
+    if (!widget.isDraggable || _bottomSheetController.isDraggingLocked) {
       return;
     }
 

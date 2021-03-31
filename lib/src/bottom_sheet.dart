@@ -30,7 +30,7 @@ class JustBottomSheet extends StatefulWidget {
 
   final EdgeInsets padding;
 
-  final List<double> anchors;
+  final List<double> snapPoints;
 
   final OnSlideCallback? onSlide;
 
@@ -57,7 +57,7 @@ class JustBottomSheet extends StatefulWidget {
     this.borderRadius = BorderRadius.zero,
     this.clipBehavior = Clip.hardEdge,
     this.isDraggable = true,
-    this.anchors = const [0.0, 1.0],
+    this.snapPoints = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
     this.onSlide,
     this.onSnap,
@@ -79,7 +79,7 @@ class JustBottomSheet extends StatefulWidget {
     this.borderRadius = BorderRadius.zero,
     this.clipBehavior = Clip.hardEdge,
     this.isDraggable = true,
-    this.anchors = const [0.0, 1.0],
+    this.snapPoints = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
     this.onSlide,
     this.onSnap,
@@ -99,7 +99,7 @@ class JustBottomSheet extends StatefulWidget {
     this.borderRadius = BorderRadius.zero,
     this.clipBehavior = Clip.hardEdge,
     this.isDraggable = true,
-    this.anchors = const [0.0, 1.0],
+    this.snapPoints = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
     this.onSlide,
     this.onSnap,
@@ -120,7 +120,7 @@ class JustBottomSheet extends StatefulWidget {
     this.borderRadius = BorderRadius.zero,
     this.clipBehavior = Clip.hardEdge,
     this.isDraggable = true,
-    this.anchors = const [0.0, 1.0],
+    this.snapPoints = const [0.0, 1.0],
     this.initialAnchorIndex = 0,
     this.onSlide,
     this.onSnap,
@@ -154,7 +154,7 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
       child: SlidingBehavior(
         minHeight: widget.minHeight,
         maxHeight: widget.maxHeight,
-        anchors: widget.anchors,
+        anchors: widget.snapPoints,
         onSlide: widget.onSlide,
         onSnap: widget.onSnap,
         isDraggable: widget.isDraggable,

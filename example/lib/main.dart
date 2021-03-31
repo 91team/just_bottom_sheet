@@ -42,10 +42,10 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
             left: 0,
             right: 0,
             child: JustBottomSheet.list(
-              panelDecoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
+              panelDecoration: const BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 color: Colors.white,
-                boxShadow: const <BoxShadow>[
+                boxShadow: <BoxShadow>[
                   BoxShadow(
                     color: Colors.black26,
                     spreadRadius: 1,
@@ -55,7 +55,7 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
               ),
               minHeight: 200,
               maxHeight: 600,
-              anchors: const [0, 0.5, 1],
+              snapPoints: const [0, 0.5, 1],
               onSnap: _onSnap,
               controller: controller,
               borderRadius: BorderRadius.circular(16),
