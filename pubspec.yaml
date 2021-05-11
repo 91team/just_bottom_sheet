@@ -1,8 +1,7 @@
 name: just_bottom_sheet
 description: Flexible bottom sheet widget, that does nothing redundant
-version: 0.0.4
-author:
-homepage:
+version: 0.1.0
+publish_to: "none"
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -18,4 +17,4 @@ dev_dependencies:
   pedantic91:
     git:
       url: https://github.com/91team/pedantic91.git
-      ref: v0.3.0
+      ref: v0.3.6

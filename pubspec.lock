@@ -85,11 +85,11 @@ packages:
     dependency: "direct dev"
     description:
       path: "."
-      ref: "v0.3.0"
-      resolved-ref: "19d191ba00178b83eb88c11f1fbf0ea72bf4968b"
+      ref: "v0.3.6"
+      resolved-ref: e895ac1d757f7a84c409bd97af0678b736c18739
       url: "https://github.com/91team/pedantic91.git"
     source: git
-    version: "0.3.0"
+    version: "0.3.6"
   sky_engine:
     dependency: transitive
     description: flutter
