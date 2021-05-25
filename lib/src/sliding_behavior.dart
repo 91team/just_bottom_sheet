@@ -13,13 +13,11 @@ typedef OnSnapCallback = void Function(int value);
 class SlidingBehavior extends StatefulWidget {
   final Widget child;
 
-  final SlidingBehaviorController controller;
-
   final double minHeight;
 
   final double maxHeight;
 
-  final List<double> anchors;
+  final List<double> snapPoints;
 
   final OnSlideCallback? onSlide;
 
@@ -31,12 +29,11 @@ class SlidingBehavior extends StatefulWidget {
 
   const SlidingBehavior({
     required this.child,
-    required this.controller,
     required this.minHeight,
     required this.maxHeight,
     required this.onSlide,
     required this.onSnap,
-    required this.anchors,
+    required this.snapPoints,
     required this.isDraggable,
     this.initialAnchorIndex = 0,
     Key? key,
@@ -59,7 +56,7 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
 
   double get currentBottomSheetPosition => _slidingAnimation.value;
   bool get isSliding => _slidingAnimation.isAnimating;
-  bool get isOpened => _slidingAnimation.value == widget.anchors.last;
+  bool get isOpened => _slidingAnimation.value == widget.snapPoints.last;
 
   @override
   void initState() {
@@ -69,20 +66,24 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
 
     _slidingAnimation = AnimationController(
       vsync: this,
-      value: widget.anchors[_currentSnapPoint],
+      value: widget.snapPoints[_currentSnapPoint],
     );
 
     _slidingAnimation.addListener(_onSlide);
     _slidingAnimation.addStatusListener(_onSlideAnimationStatusChanged);
 
-    widget.controller._attach(this);
-
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       _bottomSheetController = BottomSheetInnerControllerProvider.of(context);
-      if (widget.initialAnchorIndex == widget.anchors.length - 1) {
+      if (widget.initialAnchorIndex == widget.snapPoints.length - 1) {
         _bottomSheetController.enableScroll();
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _slidingAnimation.dispose();
+    super.dispose();
   }
 
   @override
@@ -102,14 +103,8 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
     );
   }
 
-  @override
-  void dispose() {
-    _slidingAnimation.dispose();
-    super.dispose();
-  }
-
   Future<void> snapTo(int anchorIndex) {
-    final positionToAnimate = widget.anchors[anchorIndex];
+    final positionToAnimate = widget.snapPoints[anchorIndex];
 
     return _slidingAnimation.animateTo(
       positionToAnimate,
@@ -124,12 +119,12 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
 
   void _onSlideAnimationStatusChanged(AnimationStatus status) {
     if (status == AnimationStatus.completed) {
-      final anchorIndex = widget.anchors.indexWhere((anchor) => anchor == _slidingAnimation.value);
+      final anchorIndex = widget.snapPoints.indexWhere((anchor) => anchor == _slidingAnimation.value);
       if (anchorIndex != _kNotFound) {
         widget.onSnap?.call(anchorIndex);
       }
 
-      if (_slidingAnimation.value == widget.anchors.last) {
+      if (_slidingAnimation.value == widget.snapPoints.last) {
         _bottomSheetController.enableScroll();
       }
     }
@@ -181,11 +176,11 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
   }
 
   int _findPointToSnapIndex(double currentValue) {
-    final anchorsCopy = <double>[...widget.anchors];
+    final anchorsCopy = <double>[...widget.snapPoints];
 
     anchorsCopy.sort((a, b) => (a - currentValue).abs().compareTo((b - currentValue).abs()));
 
-    final nearestAnchorIndex = widget.anchors.indexOf(anchorsCopy.first);
+    final nearestAnchorIndex = widget.snapPoints.indexOf(anchorsCopy.first);
 
     return nearestAnchorIndex;
   }

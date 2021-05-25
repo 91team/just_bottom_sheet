@@ -28,8 +28,6 @@ class JustBottomSheetExample extends StatefulWidget {
 }
 
 class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
-  final controller = JustBottomSheetController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,18 +55,21 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
               maxHeight: 600,
               snapPoints: const [0, 0.5, 1],
               onSnap: _onSnap,
-              controller: controller,
               borderRadius: BorderRadius.circular(16),
               builder: (context, scrollController) {
                 return ListView(
                   controller: scrollController,
+                  primary: false,
                   children: [
                     for (int i = 0; i < 100; i++)
-                      Container(
-                        width: 100,
-                        height: 100,
-                        margin: const EdgeInsets.all(16),
-                        color: Colors.green,
+                      GestureDetector(
+                        onTap: () => print('tap'),
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          margin: const EdgeInsets.all(16),
+                          color: Colors.green,
+                        ),
                       ),
                   ],
                 );

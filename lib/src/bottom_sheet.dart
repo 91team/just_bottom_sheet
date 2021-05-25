@@ -31,8 +31,6 @@ class JustBottomSheet extends StatefulWidget {
 
   final bool isDraggable;
 
-  final JustBottomSheetController controller;
-
   final int initialSnapIndex;
 
   final BorderRadius borderRadius;
@@ -43,7 +41,6 @@ class JustBottomSheet extends StatefulWidget {
     required Widget this.child,
     required this.minHeight,
     required this.maxHeight,
-    required this.controller,
     required this.panelDecoration,
     this.borderRadius = BorderRadius.zero,
     this.clipBehavior = Clip.hardEdge,
@@ -60,7 +57,6 @@ class JustBottomSheet extends StatefulWidget {
     required CustomBottomSheetBuilder this.builder,
     required this.minHeight,
     required this.maxHeight,
-    required this.controller,
     required this.panelDecoration,
     this.borderRadius = BorderRadius.zero,
     this.clipBehavior = Clip.hardEdge,
@@ -78,29 +74,20 @@ class JustBottomSheet extends StatefulWidget {
 }
 
 class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProviderStateMixin {
-  final innerController = BottomSheetInnerController();
-  final slidingBehaviorController = SlidingBehaviorController();
-
-  @override
-  void initState() {
-    widget.controller._attach(this);
-
-    super.initState();
-  }
+  final _innerController = BottomSheetInnerController();
 
   @override
   Widget build(BuildContext context) {
     return BottomSheetInnerControllerProvider(
-      controller: innerController,
+      controller: _innerController,
       child: SlidingBehavior(
         minHeight: widget.minHeight,
         maxHeight: widget.maxHeight,
-        anchors: widget.snapPoints,
+        snapPoints: widget.snapPoints,
         onSlide: widget.onSlide,
         onSnap: widget.onSnap,
         isDraggable: widget.isDraggable,
         initialAnchorIndex: widget.initialSnapIndex,
-        controller: slidingBehaviorController,
         child: Panel(
           height: widget.maxHeight,
           decoration: widget.panelDecoration,
@@ -128,27 +115,5 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
     }
 
     throw Exception('JustBottomSheet: No child, children or builders provided');
-  }
-
-  bool get _isSliding => slidingBehaviorController.isSliding;
-  double get _currentBottomSheetPosition => slidingBehaviorController.currentBottomSheetPosition;
-
-  void _snapTo(int snapPointIndex) {
-    slidingBehaviorController.snapTo(snapPointIndex);
-  }
-}
-
-class JustBottomSheetController {
-  late _JustBottomSheetState bottomSheet;
-
-  bool get isSliding => bottomSheet._isSliding;
-  double get currentBottomSheetPosition => bottomSheet._currentBottomSheetPosition;
-
-  void snapTo(int snapPointIndex) {
-    bottomSheet._snapTo(snapPointIndex);
-  }
-
-  void _attach(_JustBottomSheetState bs) {
-    bottomSheet = bs;
   }
 }
