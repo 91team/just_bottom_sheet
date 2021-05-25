@@ -4,11 +4,8 @@ import 'package:just_bottom_sheet/src/inner_controller_provider.dart';
 class SingleChildContent extends StatelessWidget {
   final Widget child;
 
-  final EdgeInsets padding;
-
   const SingleChildContent({
     required this.child,
-    required this.padding,
     Key? key,
   }) : super(key: key);
 
@@ -18,7 +15,7 @@ class SingleChildContent extends StatelessWidget {
 
     return SingleChildScrollView(
       controller: innerController.scrollController,
-      padding: padding,
+      padding: EdgeInsets.zero,
       child: child,
     );
   }

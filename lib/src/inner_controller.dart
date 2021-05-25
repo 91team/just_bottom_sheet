@@ -10,6 +10,7 @@ class BottomSheetInnerController {
   }
 
   bool get isScrollDisabled => !isScrollEnabled;
+
   bool get isDraggingLocked => isScrollEnabled;
 
   void _onScroll() {

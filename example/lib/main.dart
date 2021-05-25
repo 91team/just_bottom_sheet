@@ -41,7 +41,7 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
             bottom: 0,
             left: 0,
             right: 0,
-            child: JustBottomSheet.list(
+            child: JustBottomSheet.custom(
               panelDecoration: const BoxDecoration(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 color: Colors.white,
@@ -59,38 +59,20 @@ class _JustBottomSheetExampleState extends State<JustBottomSheetExample> {
               onSnap: _onSnap,
               controller: controller,
               borderRadius: BorderRadius.circular(16),
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  height: 100,
-                  margin: const EdgeInsets.all(16),
-                  color: const Color(0xFFFF0000),
-                ),
-                Container(
-                  width: 100,
-                  height: 100,
-                  margin: const EdgeInsets.all(16),
-                  color: const Color(0xFFFF0000),
-                ),
-                Container(
-                  width: 100,
-                  height: 100,
-                  margin: const EdgeInsets.all(16),
-                  color: const Color(0xFFFF0000),
-                ),
-                Container(
-                  width: 100,
-                  height: 100,
-                  margin: const EdgeInsets.all(16),
-                  color: const Color(0xFFFF0000),
-                ),
-                Container(
-                  width: 100,
-                  height: 100,
-                  margin: const EdgeInsets.all(16),
-                  color: const Color(0xFFFF0000),
-                ),
-              ],
+              builder: (context, scrollController) {
+                return ListView(
+                  controller: scrollController,
+                  children: [
+                    for (int i = 0; i < 100; i++)
+                      Container(
+                        width: 100,
+                        height: 100,
+                        margin: const EdgeInsets.all(16),
+                        color: Colors.green,
+                      ),
+                  ],
+                );
+              },
             ),
           ),
         ],
