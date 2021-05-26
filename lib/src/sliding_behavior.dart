@@ -46,8 +46,6 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
 
   bool _isDragJustStarted = false;
 
-  late Offset _dragStartPosition;
-
   double get minHeight => widget.minHeight;
 
   double get maxHeight => widget.maxHeight;
@@ -131,8 +129,6 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
 
   void _onDragStart(PointerDownEvent event) {
     _isDragJustStarted = true;
-
-    _dragStartPosition = event.localPosition;
 
     if (_slidingAnimation.isAnimating) {
       _slidingAnimation.stop();
