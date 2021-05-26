@@ -29,8 +29,6 @@ class JustBottomSheet extends StatefulWidget {
 
   final BoxDecoration panelDecoration;
 
-  final bool isDraggable;
-
   final int initialSnapIndex;
 
   final BorderRadius borderRadius;
@@ -44,7 +42,6 @@ class JustBottomSheet extends StatefulWidget {
     required this.panelDecoration,
     this.borderRadius = BorderRadius.zero,
     this.clipBehavior = Clip.hardEdge,
-    this.isDraggable = true,
     this.snapPoints = const [0.0, 1.0],
     this.initialSnapIndex = 0,
     this.onSnap,
@@ -60,7 +57,6 @@ class JustBottomSheet extends StatefulWidget {
     required this.panelDecoration,
     this.borderRadius = BorderRadius.zero,
     this.clipBehavior = Clip.hardEdge,
-    this.isDraggable = true,
     this.snapPoints = const [0.0, 1.0],
     this.initialSnapIndex = 0,
     this.onSnap,
@@ -86,8 +82,7 @@ class _JustBottomSheetState extends State<JustBottomSheet> with SingleTickerProv
         snapPoints: widget.snapPoints,
         onSlide: widget.onSlide,
         onSnap: widget.onSnap,
-        isDraggable: widget.isDraggable,
-        initialAnchorIndex: widget.initialSnapIndex,
+        initialSnapPointIndex: widget.initialSnapIndex,
         child: Panel(
           height: widget.maxHeight,
           decoration: widget.panelDecoration,

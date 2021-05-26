@@ -23,9 +23,7 @@ class SlidingBehavior extends StatefulWidget {
 
   final OnSnapCallback? onSnap;
 
-  final bool isDraggable;
-
-  final int initialAnchorIndex;
+  final int initialSnapPointIndex;
 
   const SlidingBehavior({
     required this.child,
@@ -34,8 +32,7 @@ class SlidingBehavior extends StatefulWidget {
     required this.onSlide,
     required this.onSnap,
     required this.snapPoints,
-    required this.isDraggable,
-    this.initialAnchorIndex = 0,
+    this.initialSnapPointIndex = 0,
     Key? key,
   }) : super(key: key);
 
@@ -46,27 +43,28 @@ class SlidingBehavior extends StatefulWidget {
 class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProviderStateMixin {
   late final AnimationController _slidingAnimation;
   late final BottomSheetInnerController _bottomSheetController;
-  late int _currentSnapPoint;
 
   bool _isDragJustStarted = false;
 
+  late Offset _dragStartPosition;
+
   double get minHeight => widget.minHeight;
+
   double get maxHeight => widget.maxHeight;
+
   double get currentSheetHeight => _slidingAnimation.value * (maxHeight - minHeight) + minHeight;
 
-  double get currentBottomSheetPosition => _slidingAnimation.value;
   bool get isSliding => _slidingAnimation.isAnimating;
+
   bool get isOpened => _slidingAnimation.value == widget.snapPoints.last;
 
   @override
   void initState() {
     super.initState();
 
-    _currentSnapPoint = widget.initialAnchorIndex;
-
     _slidingAnimation = AnimationController(
       vsync: this,
-      value: widget.snapPoints[_currentSnapPoint],
+      value: widget.snapPoints[widget.initialSnapPointIndex],
     );
 
     _slidingAnimation.addListener(_onSlide);
@@ -74,7 +72,7 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
 
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       _bottomSheetController = BottomSheetInnerControllerProvider.of(context);
-      if (widget.initialAnchorIndex == widget.snapPoints.length - 1) {
+      if (widget.initialSnapPointIndex == widget.snapPoints.length - 1) {
         _bottomSheetController.enableScroll();
       }
     });
@@ -89,6 +87,7 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     return Listener(
+      behavior: HitTestBehavior.opaque,
       onPointerDown: _onDragStart,
       onPointerMove: _onDragUpdate,
       onPointerUp: _onDragEnd,
@@ -131,11 +130,9 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
   }
 
   void _onDragStart(PointerDownEvent event) {
-    if (!widget.isDraggable) {
-      return;
-    }
-
     _isDragJustStarted = true;
+
+    _dragStartPosition = event.localPosition;
 
     if (_slidingAnimation.isAnimating) {
       _slidingAnimation.stop();
@@ -143,21 +140,21 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
   }
 
   void _onDragUpdate(PointerMoveEvent event) {
-    if (!widget.isDraggable) {
+    if (event.delta == Offset.zero) {
       return;
     }
 
     if (_isDragJustStarted) {
       if (isOpened &&
           event.delta.dy > 0 &&
-          _bottomSheetController.isScrollEnabled &&
+          _bottomSheetController.isContentScrollEnabled &&
           _bottomSheetController.scrollController.offset <= 0) {
         _bottomSheetController.disableScroll();
       }
       _isDragJustStarted = false;
     }
 
-    if (_bottomSheetController.isDraggingLocked) {
+    if (_bottomSheetController.isContentScrollEnabled) {
       return;
     }
 
@@ -165,7 +162,7 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
   }
 
   void _onDragEnd(PointerUpEvent event) {
-    if (!widget.isDraggable || _bottomSheetController.isDraggingLocked) {
+    if (_bottomSheetController.isContentScrollEnabled) {
       return;
     }
 
@@ -183,20 +180,5 @@ class _SlidingBehaviorState extends State<SlidingBehavior> with SingleTickerProv
     final nearestAnchorIndex = widget.snapPoints.indexOf(anchorsCopy.first);
 
     return nearestAnchorIndex;
-  }
-}
-
-class SlidingBehaviorController {
-  late _SlidingBehaviorState _slidingBehavior;
-
-  bool get isSliding => _slidingBehavior.isSliding;
-  double get currentBottomSheetPosition => _slidingBehavior.currentBottomSheetPosition;
-
-  void snapTo(int snapPointIndex) {
-    _slidingBehavior.snapTo(snapPointIndex);
-  }
-
-  void _attach(_SlidingBehaviorState behavior) {
-    _slidingBehavior = behavior;
   }
 }

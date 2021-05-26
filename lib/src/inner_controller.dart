@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class BottomSheetInnerController {
-  bool isScrollEnabled = false;
+  bool isContentScrollEnabled = false;
 
   final scrollController = ScrollController();
 
@@ -9,22 +9,18 @@ class BottomSheetInnerController {
     scrollController.addListener(_onScroll);
   }
 
-  bool get isScrollDisabled => !isScrollEnabled;
-
-  bool get isDraggingLocked => isScrollEnabled;
-
   void _onScroll() {
-    if (isScrollDisabled) {
+    if (!isContentScrollEnabled) {
       scrollController.jumpTo(0);
     }
   }
 
   void enableScroll() {
-    isScrollEnabled = true;
+    isContentScrollEnabled = true;
   }
 
   void disableScroll() {
-    isScrollEnabled = false;
+    isContentScrollEnabled = false;
   }
 
   void dispose() {
